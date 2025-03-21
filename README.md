@@ -64,9 +64,12 @@ This project is a fully functional **Dynamic Dashboard** built with:
 ```bash
   git clone <repository_url>
   cd dynamic-dashboard
+```
 2. **Install Dependencies**
 ```bash
   npm install
+```
 3. **Run the Development Server**
 ```bash
   npm run dev
+```
