@@ -5,7 +5,6 @@ export interface User {
 }
 
 export const login = async (email: string, password: string): Promise<User> => {
-  // Mock login - in production, this would call your auth API
   if (password.length < 6) {
     throw new Error('Password must be at least 6 characters');
   }
@@ -13,29 +12,41 @@ export const login = async (email: string, password: string): Promise<User> => {
   // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const user = {
+  const user: User = {
     id: '1',
     email,
     name: email.split('@')[0],
   };
 
-  // Store mock JWT token
-  localStorage.setItem('token', 'mock-jwt-token');
-  localStorage.setItem('user', JSON.stringify(user));
+  // Store token and user data only on the client side
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('token', 'mock-jwt-token');
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 
   return user;
 };
 
 export const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 };
 
 export const getUser = (): User | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   const userStr = localStorage.getItem('user');
   return userStr ? JSON.parse(userStr) : null;
 };
 
 export const isAuthenticated = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   return !!localStorage.getItem('token');
 };
